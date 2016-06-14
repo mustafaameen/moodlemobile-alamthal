@@ -5,8 +5,8 @@
         <ion-nav-bar class="bar-content">
             <ion-nav-back-button>
             </ion-nav-back-button>
-            <ion-nav-buttons side="left">
-                <button menu-toggle="left" class="button button-icon icon ion-navicon" aria-label="{{ 'mm.sidemenu.togglemenu' | translate }}"></button>
+            <ion-nav-buttons side="right">
+                <button menu-toggle="right" class="button button-icon icon ion-navicon" aria-label="{{ 'mm.sidemenu.togglemenu' | translate }}"></button>
             </ion-nav-buttons>
         </ion-nav-bar>
 
@@ -15,7 +15,7 @@
 
     </ion-side-menu-content>
 
-    <ion-side-menu side="left" id="mm-side-menu-left">
+    <ion-side-menu side="right" id="mm-side-menu-left">
         <header>
             <div class="bar bar-header bar-side-menu">
                 <div class="item item-avatar">
@@ -69,7 +69,7 @@
         </ion-content>
     </ion-side-menu>
 
-    <ion-side-menu side="right" id="mm-side-menu-right" is-enabled="rightSideMenu && rightSideMenu.show">
+    <ion-side-menu side="left" id="mm-side-menu-right" is-enabled="rightSideMenu && rightSideMenu.show">
         <ng-include ng-if="rightSideMenu && rightSideMenu.show" src="rightSideMenu.template"></ng-include>
     </ion-side-menu>
 </ion-side-menus>
