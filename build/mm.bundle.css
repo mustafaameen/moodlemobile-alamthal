@@ -3232,7 +3232,9 @@ a.subdued {
   font-size: 24px; }
 .platform-android .bar .title {
   font-size: 19px;
-  line-height: 44px; }
+  line-height: 44px;
+  /* right direction Alamthal */
+  text-align: right; }
 
 .bar-light .button {
   border-color: #ddd;
@@ -5345,7 +5347,9 @@ a.item-content {
 
 .card .item:first-child, .list-inset .item:first-child, .padding > .list .item:first-child {
   border-top-left-radius: 2px;
-  border-top-right-radius: 2px; }
+  border-top-right-radius: 2px;
+  /* right direction Alamthal */
+  direction: rtl; }
   .card .item:first-child .item-content, .list-inset .item:first-child .item-content, .padding > .list .item:first-child .item-content {
     border-top-left-radius: 2px;
     border-top-right-radius: 2px; }
@@ -5770,7 +5774,9 @@ input, button, select, textarea {
   border-radius: 4px;
   padding-right: 8px;
   padding-left: 8px;
-  background: #eee; }
+  background: #eee;
+  /* right direction Alamthal */
+  direction: rtl; }
 
 .item-input-inset .item-input-wrapper input {
   padding-left: 4px;
@@ -7634,7 +7640,9 @@ a.button {
 [nav-bar-transition="ios"] [nav-bar="active"], [nav-bar-transition="ios"] [nav-bar="entering"] {
   z-index: 10; }
   [nav-bar-transition="ios"] [nav-bar="active"] .bar, [nav-bar-transition="ios"] [nav-bar="entering"] .bar {
-    background: transparent; }
+    background: transparent;
+    /* right direction Alamthal */
+    direction: rtl; }
 [nav-bar-transition="ios"] [nav-bar="cached"] {
   display: block; }
   [nav-bar-transition="ios"] [nav-bar="cached"] .header-item {
