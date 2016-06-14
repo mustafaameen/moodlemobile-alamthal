@@ -2307,6 +2307,7 @@ html {
  * Remove default margin.
  */
 body {
+  direction: rtl;
   margin: 0;
   line-height: 1; }
 
