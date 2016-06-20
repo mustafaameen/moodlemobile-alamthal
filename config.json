@@ -7,6 +7,7 @@
     "languages": {"ar": "عربي", "en": "English"},
     "wsservice" : "moodle_mobile_app",
     "wsextservice" : "local_mobile",
-    "siteurl": "http://alamthal.org/"
+    "demo_sites": {},
+    "siteurl": "http://alamthal.org/",
     "gcmpn": "694767596569"
 }
