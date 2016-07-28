@@ -30,7 +30,7 @@ angular.module('mm.addons.mod_forum')
 
     $scope.newdiscussion = {
         subject: '',
-        text: '',
+        message: '',
         subscribe: true
     };
 
@@ -160,7 +160,7 @@ angular.module('mm.addons.mod_forum')
     // Add a new discussion.
     $scope.add = function() {
         var subject = $scope.newdiscussion.subject,
-            message = $scope.newdiscussion.text,
+            message = $scope.newdiscussion.message,
             subscribe = $scope.newdiscussion.subscribe,
             groupid = $scope.newdiscussion.groupid;
 
@@ -172,20 +172,9 @@ angular.module('mm.addons.mod_forum')
             $mmUtil.showErrorModal('mma.mod_forum.erroremptymessage', true);
             return;
         }
+        message = '<p>' + message + '<p>';
 
-        // Check if rich text editor is enabled or not.
-        $mmUtil.isRichTextEditorEnabled().then(function(enabled) {
-            if (!enabled) {
-                // Rich text editor not enabled, add some HTML to the message if needed.
-                if (message.indexOf('<p>') == -1) {
-                    // Wrap the text in <p> tags.
-                    message = '<p>' + message + '</p>';
-                }
-                message = message.replace(/\n/g, '<br>');
-            }
-
-            return $mmaModForum.addNewDiscussion(forumid, subject, message, subscribe, groupid);
-        }).then(function(discussionid) {
+        $mmaModForum.addNewDiscussion(forumid, subject, message, subscribe, groupid).then(function(discussionid) {
             var data = {
                 forumid: forumid,
                 discussionid: discussionid,
@@ -196,7 +185,7 @@ angular.module('mm.addons.mod_forum')
             if ($ionicPlatform.isTablet()) {
                 // Empty form.
                 $scope.newdiscussion.subject = '';
-                $scope.newdiscussion.text = '';
+                $scope.newdiscussion.message = '';
             } else {
                 // Go back to discussions list.
                 $ionicHistory.goBack();

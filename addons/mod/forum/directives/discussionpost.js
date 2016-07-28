@@ -33,7 +33,6 @@ angular.module('mm.addons.mod_forum')
  * @param {Boolean} titleimportant  True if title should be "important" (bold).
  * @oaram {Function} [postadded]    Function to call when a new post is added.
  * @param {String} [defaultsubject] Default subject to set to new posts.
- * @param {String} [scrollHandle]   Name of the scroll handle of the page containing the post.
  */
 .directive('mmaModForumDiscussionPost', function($mmaModForum, $mmUtil, $translate, $q) {
     return {
@@ -48,8 +47,7 @@ angular.module('mm.addons.mod_forum')
             showdivider: '=?',
             titleimportant: '=?',
             postadded: '&?',
-            defaultsubject: '=?',
-            scrollHandle: '@?'
+            defaultsubject: '=?'
         },
         templateUrl: 'addons/mod/forum/templates/discussionpost.html',
         transclude: true,
@@ -67,36 +65,24 @@ angular.module('mm.addons.mod_forum')
                     $mmUtil.showErrorModal('mma.mod_forum.erroremptysubject', true);
                     return;
                 }
-                if (!scope.newpost.text) {
+                if (!scope.newpost.message) {
                     $mmUtil.showErrorModal('mma.mod_forum.erroremptymessage', true);
                     return;
                 }
 
-                var message = scope.newpost.text,
+                var message = '<p>' + scope.newpost.message.replace(/\n/g, '<br>') + '</p>',
                     modal = $mmUtil.showModalLoading('mm.core.sending', true);
 
-                // Check if rich text editor is enabled or not.
-                $mmUtil.isRichTextEditorEnabled().then(function(enabled) {
-                    if (!enabled) {
-                        // Rich text editor not enabled, add some HTML to the message if needed.
-                        if (message.indexOf('<p>') == -1) {
-                            // Wrap the text in <p> tags.
-                            message = '<p>' + message + '</p>';
-                        }
-                        message = message.replace(/\n/g, '<br>');
+                $mmaModForum.replyPost(scope.newpost.replyingto, scope.newpost.subject, message).then(function() {
+                    if (scope.postadded) {
+                        scope.postadded();
                     }
-
-                    return $mmaModForum.replyPost(scope.newpost.replyingto, scope.newpost.subject, message).then(function() {
-                        if (scope.postadded) {
-                            scope.postadded();
-                        }
-                    }).catch(function(message) {
-                        if (message) {
-                            $mmUtil.showErrorModal(message);
-                        } else {
-                            $mmUtil.showErrorModal('mma.mod_forum.couldnotadd', true);
-                        }
-                    });
+                }).catch(function(message) {
+                    if (message) {
+                        $mmUtil.showErrorModal(message);
+                    } else {
+                        $mmUtil.showErrorModal('mma.mod_forum.couldnotadd', true);
+                    }
                 }).finally(function() {
                     modal.dismiss();
                 });
@@ -105,7 +91,7 @@ angular.module('mm.addons.mod_forum')
             // Cancel reply.
             scope.cancel = function() {
                 var promise;
-                if (!scope.newpost.subject && !scope.newpost.text) {
+                if (!scope.newpost.subject && !scope.newpost.message) {
                     promise = $q.when(); // Nothing written, cancel right away.
                 } else {
                     promise = $mmUtil.showConfirm($translate('mm.core.areyousure'));
@@ -114,7 +100,7 @@ angular.module('mm.addons.mod_forum')
                 promise.then(function() {
                     scope.newpost.replyingto = undefined;
                     scope.newpost.subject = scope.defaultsubject || '';
-                    scope.newpost.text = '';
+                    scope.newpost.message = '';
                 });
             };
         }

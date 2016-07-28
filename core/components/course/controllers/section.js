@@ -22,8 +22,7 @@ angular.module('mm.core.course')
  * @name mmCourseSectionCtrl
  */
 .controller('mmCourseSectionCtrl', function($mmCourseDelegate, $mmCourse, $mmUtil, $scope, $stateParams, $translate, $mmSite,
-            $mmEvents, $ionicScrollDelegate, $mmCourses, $q, mmCoreEventCompletionModuleViewed, $controller,
-            $mmCoursePrefetchDelegate, $mmCourseHelper) {
+            $mmEvents, $ionicScrollDelegate, $mmCourses, $q, mmCoreEventCompletionModuleViewed, $controller) {
 
     // Default values are course 1 (front page) and all sections.
     var courseId = $stateParams.cid || 1,
@@ -130,17 +129,7 @@ angular.module('mm.core.course')
     });
 
     $scope.doRefresh = function() {
-        var promises = [];
-
-        promises.push($mmCourse.invalidateSections(courseId));
-
-        if ($scope.sections) {
-            // Invalidate modules prefetch data.
-            var modules = $mmCourseHelper.getSectionsModules($scope.sections);
-            promises.push($mmCoursePrefetchDelegate.invalidateModules(modules, courseId));
-        }
-
-        $q.all(promises).finally(function() {
+        $mmCourse.invalidateSections(courseId).finally(function() {
             loadContent(sectionId).finally(function() {
                 $scope.$broadcast('scroll.refreshComplete');
             });

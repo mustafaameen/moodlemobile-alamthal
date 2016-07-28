@@ -21,7 +21,7 @@ angular.module('mm.addons.mod_survey')
  * @ngdoc controller
  * @name mmaModSurveyIndexCtrl
  */
-.controller('mmaModSurveyIndexCtrl', function($scope, $stateParams, $mmaModSurvey, $mmUtil, $q, $mmCourse, $translate, $mmText,
+.controller('mmaModSurveyIndexCtrl', function($scope, $stateParams, $mmaModSurvey, $mmUtil, $q, $mmCourse, $translate,
             $ionicPlatform, $ionicScrollDelegate) {
     var module = $stateParams.module || {},
         courseid = $stateParams.courseid,
@@ -30,11 +30,10 @@ angular.module('mm.addons.mod_survey')
 
     $scope.title = module.name;
     $scope.description = module.description;
-    $scope.moduleUrl = module.url;
+    $scope.moduleurl = module.url;
     $scope.courseid = courseid;
     $scope.answers = {};
     $scope.isTablet = $ionicPlatform.isTablet();
-    $scope.refreshIcon = 'spinner';
 
     // Convenience function to get survey data.
     function fetchSurveyData(refresh) {
@@ -96,7 +95,6 @@ angular.module('mm.addons.mod_survey')
         });
     }).finally(function() {
         $scope.surveyLoaded = true;
-        $scope.refreshIcon = 'ion-refresh';
     });
 
     // Check if answers are valid to be submitted.
@@ -141,19 +139,10 @@ angular.module('mm.addons.mod_survey')
         });
     };
 
-    // Context Menu Description action.
-    $scope.expandDescription = function() {
-        $mmText.expandText($translate.instant('mm.core.description'), $scope.description);
-    };
-
     // Pull to refresh.
     $scope.refreshSurvey = function() {
-        if ($scope.surveyLoaded) {
-            $scope.refreshIcon = 'spinner';
-            refreshAllData().finally(function() {
-                $scope.refreshIcon = 'ion-refresh';
-                $scope.$broadcast('scroll.refreshComplete');
-            });
-        }
+        refreshAllData().finally(function() {
+            $scope.$broadcast('scroll.refreshComplete');
+        });
     };
 });

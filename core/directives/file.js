@@ -32,8 +32,6 @@ angular.module('mm.core')
  * @param {String} [component]     Component the file belongs to.
  * @param {Number} [componentId]   Component ID.
  * @param {Boolean} [timemodified] If set, the value will be used to check if the file is outdated.
- * @param {Boolean} [canDelete]    True if file can be deleted, false otherwise.
- * @param {Function} [onDelete]    Function to call when the delete button is clicked.
  */
 .directive('mmFile', function($q, $mmUtil, $mmFilepool, $mmSite, $mmApp, $mmEvents, $mmFS, mmCoreDownloaded, mmCoreDownloading,
             mmCoreNotDownloaded, mmCoreOutdated) {
@@ -164,9 +162,7 @@ angular.module('mm.core')
         restrict: 'E',
         templateUrl: 'core/templates/file.html',
         scope: {
-            file: '=',
-            canDelete: '@?',
-            onDelete: '&?'
+            file: '='
         },
         link: function(scope, element, attrs) {
             var fileUrl = scope.file.fileurl || scope.file.url,
@@ -177,11 +173,6 @@ angular.module('mm.core')
                 component = attrs.component,
                 componentId = attrs.componentId,
                 observer;
-
-            if (!fileName) {
-                // Invalid data received.
-                return;
-            }
 
             scope.filename = fileName;
             scope.fileicon = $mmFS.getFileIcon(fileName);
@@ -227,16 +218,6 @@ angular.module('mm.core')
                     });
                 }
             };
-
-            if (scope.canDelete) {
-                scope.delete = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (scope.onDelete) {
-                        scope.onDelete();
-                    }
-                };
-            }
 
             scope.$on('$destroy', function() {
                 if (observer && observer.off) {

@@ -35,15 +35,6 @@ angular.module('mm.addons.qtype_ddimageortext')
         this.proportion = 1;
         this.selected = null;
 
-        this.resizeFunction = function() {
-            instance.reposition_drags_for_question();
-        };
-
-        this.destroy = function() {
-            this.stop_polling();
-            ionic.off('resize', this.resizeFunction, window);
-        };
-
         this.initializer = function(question) {
             this.doc = this.doc_structure(question.slot);
 
@@ -79,7 +70,9 @@ angular.module('mm.addons.qtype_ddimageortext')
                 instance.poll_for_image_load();
             });
 
-            ionic.on('resize', this.resizeFunction, window);
+            ionic.on('resize', function() {
+                instance.reposition_drags_for_question();
+            });
         };
 
         this.poll_for_image_load = function () {

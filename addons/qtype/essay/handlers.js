@@ -21,7 +21,7 @@ angular.module('mm.addons.qtype_essay')
  * @ngdoc service
  * @name $mmaQtypeEssayHandler
  */
-.factory('$mmaQtypeEssayHandler', function($mmUtil, $mmQuestionHelper) {
+.factory('$mmaQtypeEssayHandler', function($mmUtil) {
 
     var self = {};
 
@@ -52,10 +52,6 @@ angular.module('mm.addons.qtype_essay')
         if (questionEl.querySelector('div[id*=filemanager]')) {
             // The question allows attachments. Since the app cannot attach files yet we will prevent submitting the question.
             return 'mm.question.errorattachmentsnotsupported';
-        }
-
-        if ($mmQuestionHelper.hasDraftFileUrls(questionEl.innerHTML)) {
-            return 'mm.question.errorinlinefilesnotsupported';
         }
     };
 

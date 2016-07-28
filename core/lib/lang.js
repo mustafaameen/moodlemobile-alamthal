@@ -55,7 +55,7 @@ angular.module('mm.core')
      * @module mm.core
      * @ngdoc method
      * @name $mmLang#getCurrentLanguage
-     * @return {Promise} Promise resolved with the current language.
+     * @return {[type]} [description]
      */
     self.getCurrentLanguage = function() {
 

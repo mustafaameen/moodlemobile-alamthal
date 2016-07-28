@@ -160,7 +160,7 @@ angular.module('mm.core')
                 }
             });
 
-            $mmUtil.allPromises(promises).finally(readiness.resolve);
+            $q.all(promises).finally(readiness.resolve);
         };
 
         /**

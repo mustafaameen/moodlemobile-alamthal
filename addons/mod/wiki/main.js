@@ -17,8 +17,6 @@ angular.module('mm.addons.mod_wiki', [])
 .constant('mmaModWikiSubwikiPagesLoaded', 'mma_mod_wiki_subwiki_pages_loaded')
 
 .constant('mmaModWikiComponent', 'mmaModWiki')
-// Renew Lock Timeout in seconds.
-.constant('mmaModWikiRenewLockTimeout', 30)
 
 .config(function($stateProvider) {
 
@@ -40,24 +38,6 @@ angular.module('mm.addons.mod_wiki', [])
             'site': {
                 controller: 'mmaModWikiIndexCtrl',
                 templateUrl: 'addons/mod/wiki/templates/index.html'
-            }
-        }
-    })
-
-    .state('site.mod_wiki-edit', {
-        url: '/mod_wiki-edit',
-        params: {
-            module: null,
-            courseid: null,
-            pageid: null,
-            pagetitle: null,
-            subwikiid: null,
-            section: null
-        },
-        views: {
-            'site': {
-                controller: 'mmaModWikiEditCtrl',
-                templateUrl: 'addons/mod/wiki/templates/edit.html'
             }
         }
     });

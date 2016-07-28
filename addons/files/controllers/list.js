@@ -15,7 +15,7 @@
 angular.module('mm.addons.files')
 
 .controller('mmaFilesListController', function($q, $scope, $stateParams, $mmaFiles, $mmSite, $translate, $mmUtil,
-        $mmaFilesHelper, $mmApp, mmaFilesMyComponent, mmaFilesSiteComponent) {
+        $ionicHistory, mmaFilesUploadStateName, $state, $mmApp, mmaFilesMyComponent, mmaFilesSiteComponent) {
 
     var path = $stateParams.path,
         root = $stateParams.root,
@@ -54,22 +54,29 @@ angular.module('mm.addons.files')
         });
     }
 
-    // Function to refresh files list.
-    function refreshFiles() {
-        return $mmaFiles.invalidateDirectory(root, path).finally(function() {
-            return fetchFiles(root, path);
-        });
-    }
-
     fetchFiles(root, path).finally(function() {
         $scope.filesLoaded = true;
     });
 
     $scope.refreshFiles = function() {
-        refreshFiles().finally(function() {
-            $scope.$broadcast('scroll.refreshComplete');
+        $mmaFiles.invalidateDirectory(root, path).finally(function() {
+            fetchFiles(root, path).finally(function() {
+                $scope.$broadcast('scroll.refreshComplete');
+            });
         });
     };
+
+    // Update list if we come from upload page (we don't know if user upoaded a file or not).
+    // List is invalidated in upload state after uploading a file.
+    $scope.$on('$ionicView.enter', function() {
+        var forwardView = $ionicHistory.forwardView();
+        if (forwardView && forwardView.stateName === mmaFilesUploadStateName) {
+            $scope.filesLoaded = false;
+            fetchFiles(root, path).finally(function() {
+                $scope.filesLoaded = true;
+            });
+        }
+    });
 
     $scope.showUpload = function() {
         return (root === 'my' && !path && $mmSite.canUploadFiles());
@@ -79,16 +86,11 @@ angular.module('mm.addons.files')
     $scope.add = function() {
         $mmaFiles.versionCanUploadFiles().then(function(canUpload) {
             if (!canUpload) {
-                $mmUtil.showModal('mm.core.notice', 'mma.files.erroruploadnotworking');
+                $mmUtil.showErrorModal('mma.files.erroruploadnotworking', true);
             } else if (!$mmApp.isOnline()) {
-                $mmUtil.showErrorModal('mm.fileuploader.errormustbeonlinetoupload', true);
+                $mmUtil.showErrorModal('mma.files.errormustbeonlinetoupload', true);
             } else {
-                $mmaFilesHelper.selectAndUploadFile().then(function() {
-                    $scope.filesLoaded = false;
-                    refreshFiles().finally(function() {
-                        $scope.filesLoaded = true;
-                    });
-                });
+                $state.go('site.files-upload', {root: root, path: path});
             }
         });
     };

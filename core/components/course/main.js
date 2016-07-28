@@ -26,8 +26,7 @@ angular.module('mm.core.course', ['mm.core.courses'])
         params: {
             courseid: null,
             sid: null, // Section to load. Not naming it sectionid because it collides with 'mm_course-section' param in split-view.
-            moduleid: null, // Module to load.
-            coursefullname: null
+            moduleid: null // Module to load.
         },
         views: {
             'site': {

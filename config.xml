@@ -2,17 +2,10 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         xmlns:android = "http://schemas.android.com/apk/res/android"
-<<<<<<< HEAD
         id        = "org.alamthal"
         versionCode = "3112"
         version   = "3.1.1.2">
     <name>الأمثل</name>
-=======
-        id        = "com.moodle.moodlemobile"
-        versionCode = "2014"
-        version   = "3.1.2">
-    <name>Moodle Mobile</name>
->>>>>>> moodlehq/android
 
     <description>
         تطبيق الأمثل للتعلم الإلكتروني
@@ -23,11 +16,7 @@
     </author>
 
     <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-<<<<<<< HEAD
         <string>3.1.1.2</string>
-=======
-        <string>3.1.2</string>
->>>>>>> moodlehq/android
     </gap:config-file>
 
     <gap:platform name="android" />
@@ -123,11 +112,11 @@
     <gap:plugin name="cordova-plugin-globalization" source="npm" />
     <gap:plugin name="cordova-plugin-inappbrowser" source="npm" />
     <gap:plugin name="cordova-plugin-network-information" source="npm" />
-    <gap:plugin name="cordova-plugin-statusbar" source="npm" version="2.1.2" />
+    <gap:plugin name="cordova-plugin-statusbar" source="npm" />
     <gap:plugin name="cordova-plugin-whitelist" source="npm" />
     <gap:plugin name="cordova-plugin-splashscreen" source="npm" />
 
-    <gap:plugin name="phonegap-plugin-push" source="npm" version="1.7.0">
+    <gap:plugin name="phonegap-plugin-push" source="npm" >
         <param name="SENDER_ID" value="694767596569" />
     </gap:plugin>
     <gap:plugin name="net.tunts.webintent" />

@@ -309,7 +309,7 @@ angular.module('mm.addons.mod_book')
                             // Remove the chapter folder from the path and add the filename.
                             key = content.filepath.replace('/' + chapter + '/', '') + content.filename;
                         }
-                        map[chapter].paths[decodeURIComponent(key)] = content.fileurl;
+                        map[chapter].paths[key] = content.fileurl;
                     }
                 }
             }
@@ -369,21 +369,15 @@ angular.module('mm.addons.mod_book')
      * @module mm.addons.mod_book
      * @ngdoc method
      * @name $mmaModBook#logView
-     * @param {Number} id        Module ID.
-     * @param {Number} chapterId Chapter ID.
-     * @return {Promise}         Promise resolved when the WS call is successful.
+     * @param {String} id Module ID.
+     * @return {Promise}  Promise resolved when the WS call is successful.
      */
-    self.logView = function(id, chapterId) {
+    self.logView = function(id) {
         if (id) {
             var params = {
-                bookid: id,
-                chapterid: chapterId
+                bookid: id
             };
-            return $mmSite.write('mod_book_view_book', params).then(function(response) {
-                if (!response.status) {
-                    return $q.reject();
-                }
-            });
+            return $mmSite.write('mod_book_view_book', params);
         }
         return $q.reject();
     };

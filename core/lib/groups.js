@@ -25,8 +25,6 @@ angular.module('mm.core')
 
     $log = $log.getInstance('$mmGroups');
 
-    var self = {};
-
     // Group mode constants.
     self.NOGROUPS       = 0;
     self.SEPARATEGROUPS = 1;

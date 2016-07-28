@@ -33,14 +33,6 @@ angular.module('mm.addons.qtype_ddwtos')
         this.inputids = inputIds;
         this.selected = null;
 
-        this.resizeFunction = function() {
-            instance.position_drag_items();
-        };
-
-        this.destroy = function() {
-            ionic.off('resize', this.resizeFunction, window);
-        };
-
         this.initializer = function(question) {
             this.selectors = this.css_selectors(question.slot);
 
@@ -62,7 +54,9 @@ angular.module('mm.addons.qtype_ddwtos')
                 instance.position_drag_items();
             });
 
-            ionic.on('resize', this.resizeFunction, window);
+            ionic.on('resize', function() {
+                instance.position_drag_items();
+            });
         };
 
         /**

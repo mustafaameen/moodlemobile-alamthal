@@ -22,8 +22,7 @@ angular.module('mm.core.textviewer', [])
         url: '/mm_textviewer',
         params: {
             title: null,
-            content: null,
-            replacelinebreaks: null
+            content: null
         },
         views: {
             'site': {

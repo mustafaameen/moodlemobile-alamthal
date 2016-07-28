@@ -21,11 +21,10 @@ angular.module('mm.core')
  * @description
  * This service provides functions related to text, like formatting texts from Moodle.
  */
-.factory('$mmText', function($q, $mmLang, $translate, $state) {
+.factory('$mmText', function($q, $mmLang, $translate) {
 
     var self = {},
-        extensionRegex = new RegExp('^[a-z0-9]+$'),
-        element = document.createElement('div'); // Fake element to use in some functions, to prevent re-creating it each time.
+        extensionRegex = new RegExp('^[a-z0-9]+$');
 
     /**
      * Given a list of sentences, build a message with all of them wrapped in <p>.
@@ -163,27 +162,6 @@ angular.module('mm.core')
     };
 
     /**
-     * Shows a text on a new State
-     *
-     * @module mm.core
-     * @ngdoc method
-     * @name $mmText#expandText
-     * @param  {String} title Title of the new state.
-     * @param  {String} text  Content of the text to be expanded.
-     * @param  {Boolean} replaceLineBreaks  Replace line breaks by br tag. Default: false.
-     */
-    self.expandText = function(title, text, replaceLineBreaks) {
-        if (text.length > 0) {
-            // Open a new state with the interpolated contents.
-            $state.go('site.mm_textviewer', {
-                title: title,
-                content: text,
-                replacelinebreaks: replaceLineBreaks
-            });
-        }
-    };
-
-    /**
      * Treat the multilang tags from a HTML code, leaving only the current language.
      *
      * @module mm.core
@@ -272,22 +250,28 @@ angular.module('mm.core')
     };
 
     /**
-     * Decode HTML entities in a text. Equivalent to PHP html_entity_decode.
+     * Decode an escaped HTML text. This implementation is based on PHP's htmlspecialchars_decode.
      *
      * @module mm.core
      * @ngdoc method
-     * @name $mmText#decodeHTMLEntities
+     * @name $mmText#decodeHTML
      * @param  {String} text Text to decode.
      * @return {String}      Decoded text.
      */
-    self.decodeHTMLEntities = function(text) {
-        if (text && typeof text === 'string') {
-            element.innerHTML = text;
-            text = element.textContent;
-            element.textContent = '';
+    self.decodeHTML = function(text) {
+        if (typeof text == 'undefined' || text === null || (typeof text == 'number' && isNaN(text))) {
+            return '';
+        } else if (typeof text != 'string') {
+            return '' + text;
         }
 
-        return text;
+        return text
+            .replace(/&amp;/g, '&')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&quot;/g, '"')
+            .replace(/&#039;/g, "'")
+            .replace(/&nbsp;/g, ' ');
     };
 
     /**
@@ -431,102 +415,6 @@ angular.module('mm.core')
         } else {
             return '' + num; // Convert to string for coherence.
         }
-    };
-
-    /**
-     * Escapes some characters in a string to be used as a regular expression.
-     *
-     * @module mm.core
-     * @ngdoc method
-     * @name $mmText#escapeForRegex
-     * @param  {String} text Text to escape.
-     * @return {String}      Escaped text.
-     */
-    self.escapeForRegex = function(text) {
-        return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-    };
-
-    /**
-     * Count words in a text.
-     *
-     * @module mm.core
-     * @ngdoc method
-     * @name $mmText#countWords
-     * @param  {String} text Text to count.
-     * @return {Number}      Number of words.
-     */
-    self.countWords = function(text) {
-        // Clean HTML scripts and tags.
-        text = text.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
-        text = text.replace(/<\/?(?!\!)[^>]*>/gi, '');
-        // Decode HTML entities.
-        text = self.decodeHTMLEntities(text);
-        // Replace underscores (which are classed as word characters) with spaces.
-        text = text.replace(/_/gi, " ");
-        // Remove any characters that shouldn't be treated as word boundaries.
-        text = text.replace(/[\'"’-]/gi, "");
-        // Remove dots and commas from within numbers only.
-        text = text.replace(/([0-9])[.,]([0-9])/gi, '$1$2');
-
-        return text.split(/\w\b/gi).length - 1;
-    };
-
-    /**
-     * Get the pluginfile URL to replace @@PLUGINFILE@@ wildcards.
-     *
-     * @module mm.core
-     * @ngdoc method
-     * @name $mmText#getTextPluginfileUrl
-     * @param  {Object[]} files Files to extract the URL from. They need to have the URL in a 'fileurl' attribute.
-     * @return {String}         Pluginfile URL, false if no files found.
-     */
-    self.getTextPluginfileUrl = function(files) {
-        if (files && files.length) {
-            var fileURL = files[0].fileurl;
-            return fileURL.substr(0, fileURL.lastIndexOf('/')).replace('pluginfile.php/', 'pluginfile.php?file=/');
-        }
-
-        return false;
-    };
-
-    /**
-     * Replace @@PLUGINFILE@@ wildcards with the real URL in a text.
-     *
-     * @module mm.core
-     * @ngdoc method
-     * @name $mmText#replacePluginfileUrls
-     * @param  {String} text    Text to treat.
-     * @param  {Object[]} files Files to extract the pluginfile URL from. They need to have the URL in a 'fileurl' attribute.
-     * @return {String}         Treated text.
-     */
-    self.replacePluginfileUrls = function(text, files) {
-        if (text) {
-            var fileURL = self.getTextPluginfileUrl(files);
-            if (fileURL) {
-                return text.replace(/@@PLUGINFILE@@/g, fileURL);
-            }
-        }
-        return text;
-    };
-
-    /**
-     * Replace pluginfile URLs with @@PLUGINFILE@@ wildcards.
-     *
-     * @module mm.core
-     * @ngdoc method
-     * @name $mmText#restorePluginfileUrls
-     * @param  {String} text    Text to treat.
-     * @param  {Object[]} files Files to extract the pluginfile URL from.  They need to have the URL in a 'fileurl' attribute.
-     * @return {String}         Treated text.
-     */
-    self.restorePluginfileUrls = function(text, files) {
-        if (text) {
-            var fileURL = self.getTextPluginfileUrl(files);
-            if (fileURL) {
-                return text.replace(new RegExp(self.escapeForRegex(fileURL), 'g'), '@@PLUGINFILE@@');
-            }
-        }
-        return text;
     };
 
     return self;

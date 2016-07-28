@@ -70,11 +70,7 @@ angular.module('mm.addons.qtype_ddmarker')
             question.loaded = false;
 
             $timeout(function() {
-                var qi = $mmaQtypeDdmarkerRender.init_question(question, question.readonly, dropzones);
-
-                scope.$on('$destroy', function() {
-                    qi.destroy();
-                });
+                $mmaQtypeDdmarkerRender.init_question(question, question.readonly, dropzones);
             });
         }
     };

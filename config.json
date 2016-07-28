@@ -1,13 +1,7 @@
 {
-<<<<<<< HEAD
     "app_id" : "org.alamthal",
     "versioncode" : "3112",
     "versionname" : "3.1.1.2",
-=======
-    "app_id" : "com.moodle.moodlemobile",
-    "versioncode" : "2014",
-    "versionname" : "3.1.2",
->>>>>>> moodlehq/android
     "cache_expiration_time" : 300000,
     "default_lang" : "ar",
     "languages": {"ar": "عربي", "en": "English"},

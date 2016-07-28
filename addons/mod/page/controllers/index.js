@@ -22,7 +22,7 @@ angular.module('mm.addons.mod_page')
  * @name mmaModPageIndexCtrl
  */
 .controller('mmaModPageIndexCtrl', function($scope, $stateParams, $mmUtil, $mmaModPage, $mmCourse, $q, $log, $mmApp,
-            mmaModPageComponent, $mmText, $translate) {
+            mmaModPageComponent) {
     $log = $log.getInstance('mmaModPageIndexCtrl');
 
     var module = $stateParams.module || {},
@@ -34,7 +34,6 @@ angular.module('mm.addons.mod_page')
     $scope.componentId = module.id;
     $scope.externalUrl = module.url;
     $scope.loaded = false;
-    $scope.refreshIcon = 'spinner';
 
     function fetchContent() {
         var downloadFailed = false;
@@ -55,25 +54,16 @@ angular.module('mm.addons.mod_page')
                 return $q.reject();
             }).finally(function() {
                 $scope.loaded = true;
-                $scope.refreshIcon = 'ion-refresh';
             });
         });
     }
 
-    // Context Menu Description action.
-    $scope.expandDescription = function() {
-        $mmText.expandText($translate.instant('mm.core.description'), $scope.description);
-    };
-
     $scope.doRefresh = function() {
-        if ($scope.loaded) {
-            $scope.refreshIcon = 'spinner';
-            $mmaModPage.invalidateContent(module.id).then(function() {
-                return fetchContent();
-            }).finally(function() {
-                $scope.$broadcast('scroll.refreshComplete');
-            });
-        }
+        $mmaModPage.invalidateContent(module.id).then(function() {
+            return fetchContent();
+        }).finally(function() {
+            $scope.$broadcast('scroll.refreshComplete');
+        });
     };
 
     fetchContent().then(function() {

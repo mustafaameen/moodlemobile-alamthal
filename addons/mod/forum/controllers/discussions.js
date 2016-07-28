@@ -23,7 +23,7 @@ angular.module('mm.addons.mod_forum')
  */
 .controller('mmaModForumDiscussionsCtrl', function($q, $scope, $stateParams, $mmaModForum, $mmCourse, $mmUtil, $mmGroups,
             $mmEvents, $ionicScrollDelegate, $ionicPlatform, mmUserProfileState, mmaModForumNewDiscussionEvent,
-            mmaModForumReplyDiscussionEvent, $mmText, $translate) {
+            mmaModForumReplyDiscussionEvent) {
     var module = $stateParams.module || {},
         courseid = $stateParams.courseid,
         forum,
@@ -36,11 +36,10 @@ angular.module('mm.addons.mod_forum')
 
     $scope.title = module.name;
     $scope.description = module.description;
-    $scope.moduleUrl = module.url;
+    $scope.moduleurl = module.url;
     $scope.courseid = courseid;
     $scope.userStateName = mmUserProfileState;
     $scope.isCreateEnabled = $mmaModForum.isCreateDiscussionEnabled();
-    $scope.refreshIcon = 'spinner';
 
     // Convenience function to get forum data and discussions.
     function fetchForumDataAndDiscussions(refresh) {
@@ -132,9 +131,7 @@ angular.module('mm.addons.mod_forum')
                 shouldScrollTop = true;
             }
             $scope.discussionsLoaded = false;
-            $scope.refreshIcon = 'spinner';
             refreshData().finally(function() {
-                $scope.refreshIcon = 'ion-refresh';
                 $scope.discussionsLoaded = true;
             });
             // Check completion since it could be configured to complete once the user adds a new discussion or replies.
@@ -147,7 +144,6 @@ angular.module('mm.addons.mod_forum')
             $mmCourse.checkModuleCompletion(courseid, module.completionstatus);
         });
     }).finally(function() {
-        $scope.refreshIcon = 'ion-refresh';
         $scope.discussionsLoaded = true;
     });
 
@@ -160,18 +156,9 @@ angular.module('mm.addons.mod_forum')
 
     // Pull to refresh.
     $scope.refreshDiscussions = function() {
-        if ($scope.discussionsLoaded) {
-            $scope.refreshIcon = 'spinner';
-            refreshData().finally(function() {
-                $scope.refreshIcon = 'ion-refresh';
-                $scope.$broadcast('scroll.refreshComplete');
-            });
-        }
-    };
-
-    // Context Menu Description action.
-    $scope.expandDescription = function() {
-        $mmText.expandText($translate.instant('mm.core.description'), $scope.description);
+        refreshData().finally(function() {
+            $scope.$broadcast('scroll.refreshComplete');
+        });
     };
 
     // Listen for discussions added. When a discussion is added, we reload the data.

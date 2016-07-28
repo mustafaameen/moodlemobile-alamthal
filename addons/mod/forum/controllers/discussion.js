@@ -35,7 +35,7 @@ angular.module('mm.addons.mod_forum')
     $scope.newpost = {
         replyingto: undefined,
         subject: '',
-        text: ''
+        message: ''
     };
 
     // Convenience function to get forum discussions.
@@ -97,7 +97,7 @@ angular.module('mm.addons.mod_forum')
 
         $scope.newpost.replyingto = undefined;
         $scope.newpost.subject = $scope.defaultSubject;
-        $scope.newpost.text = '';
+        $scope.newpost.message = '';
 
         notifyNewReply();
 

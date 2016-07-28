@@ -23,10 +23,5 @@ angular.module('mm.core.textviewer')
  */
 .controller('mmTextViewerIndexCtrl', function($stateParams, $scope) {
     $scope.title = $stateParams.title;
-
-    if ($stateParams.replacelinebreaks) {
-        $scope.content = $stateParams.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
-    } else {
-        $scope.content = $stateParams.content;
-    }
+    $scope.content = $stateParams.content;
 });
