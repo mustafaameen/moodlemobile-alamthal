@@ -176,7 +176,7 @@ angular.module('mm.addons.mod_quiz')
 
     // Fetch data.
     fetchData().then(function() {
-        $mmaModQuiz.logViewAttemptReview(attemptId);
+        $mmaModQuiz.logViewAttemptSummary(attemptId);
     }).finally(function() {
         $scope.dataLoaded = true;
     });

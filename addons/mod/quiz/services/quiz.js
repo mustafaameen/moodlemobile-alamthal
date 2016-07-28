@@ -208,7 +208,6 @@ angular.module('mm.addons.mod_quiz')
      * @module mm.addons.mod_quiz
      * @ngdoc method
      * @name $mmaModQuiz#getAllQuestionsData
-     * @param  {Object} quiz          Quiz.
      * @param  {Object} attempt       Attempt.
      * @param  {Object} preflightData Preflight required data (like password).
      * @param  {Number[]} [pages]     List of pages to get. If not defined, all pages.
@@ -217,21 +216,15 @@ angular.module('mm.addons.mod_quiz')
      * @param  {String} [siteId]      Site ID. If not defined, current site.
      * @return {Promise}              Promise resolved with the questions.
      */
-    self.getAllQuestionsData = function(quiz, attempt, preflightData, pages, offline, ignoreCache, siteId) {
+    self.getAllQuestionsData = function(attempt, preflightData, pages, offline, ignoreCache, siteId) {
         var promises = [],
-            questions = {},
-            isSequential = self.isNavigationSequential(quiz);
+            questions = {};
 
         if (!pages) {
             pages = self.getPagesFromLayout(attempt.layout);
         }
 
         pages.forEach(function(page) {
-            if (isSequential && page < attempt.currentpage) {
-                // Sequential quiz, cannot get pages before the current one.
-                return;
-            }
-
             promises.push(self.getAttemptData(attempt.id, page, preflightData, offline, ignoreCache, siteId).then(function(data) {
                 angular.forEach(data.questions, function(question) {
                     questions[question.slot] = question;
@@ -2003,21 +1996,19 @@ angular.module('mm.addons.mod_quiz')
      * @module mm.addons.mod_quiz
      * @ngdoc method
      * @name $mmaModQuiz#logViewAttempt
-     * @param {String} attemptId     Attempt ID.
-     * @param {Number} [page=0]      Page number.
-     * @param {Object} preflightData Preflight required data (like password).
-     * @param {Boolean} offline      True if attempt is offline.
-     * @return {Promise}             Promise resolved when the WS call is successful.
+     * @param {String} attemptId Attempt ID.
+     * @param {Number} [page=0]  Page number.
+     * @param {Boolean} offline  True if attempt is offline.
+     * @return {Promise}         Promise resolved when the WS call is successful.
      */
-    self.logViewAttempt = function(attemptId, page, preflightData, offline) {
+    self.logViewAttempt = function(attemptId, page, offline) {
         if (typeof page == 'undefined') {
             page = 0;
         }
 
         var params = {
                 attemptid: attemptId,
-                page: page,
-                preflightdata: $mmUtil.objectToArrayOfObjects(preflightData, 'name', 'value', true)
+                page: page
             },
             promises = [];
 
@@ -2051,14 +2042,12 @@ angular.module('mm.addons.mod_quiz')
      * @module mm.addons.mod_quiz
      * @ngdoc method
      * @name $mmaModQuiz#logViewAttemptSummary
-     * @param {String} attemptId     Attempt ID.
-     * @param {Object} preflightData Preflight required data (like password).
-     * @return {Promise}             Promise resolved when the WS call is successful.
+     * @param {String} attemptId Attempt ID.
+     * @return {Promise}         Promise resolved when the WS call is successful.
      */
-    self.logViewAttemptSummary = function(attemptId, preflightData) {
+    self.logViewAttemptSummary = function(attemptId) {
         var params = {
-            attemptid: attemptId,
-            preflightdata: $mmUtil.objectToArrayOfObjects(preflightData, 'name', 'value', true)
+            attemptid: attemptId
         };
         return $mmSite.write('mod_quiz_view_attempt_summary', params);
     };
@@ -2312,7 +2301,6 @@ angular.module('mm.addons.mod_quiz')
     self.prefetchAttempt = function(quiz, attempt, preflightData, siteId) {
         var pages = self.getPagesFromLayout(attempt.layout),
             promises = [],
-            isSequential = self.isNavigationSequential(quiz),
             attemptGrade;
 
         if (self.isAttemptFinished(attempt.state)) {
@@ -2347,11 +2335,6 @@ angular.module('mm.addons.mod_quiz')
             if (attempt.state == self.ATTEMPT_IN_PROGRESS) {
                 // Get data for each page.
                 angular.forEach(pages, function(page) {
-                    if (isSequential && page < attempt.currentpage) {
-                        // Sequential quiz, cannot get pages before the current one.
-                        return;
-                    }
-
                     promises.push(self.getAttemptData(attempt.id, page, preflightData, false, true, siteId).then(function(data) {
                         // Download the files inside the questions.
                         var questionPromises = [];

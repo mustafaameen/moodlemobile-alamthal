@@ -83,7 +83,8 @@ angular.module('mm.addons.mod_assign')
                                 submitId == $mmSite.getUserId();
                         scope.showErrorStatementSubmit = submissionStatementMissing && assign.submissiondrafts;
 
-                        scope.userSubmission = $mmaModAssign.getSubmissionObjectFromAttempt(assign, response.lastattempt);
+                        scope.userSubmission = assign.teamsubmission ?
+                            response.lastattempt.teamsubmission : response.lastattempt.submission;
 
                         if (assign.attemptreopenmethod != mmaModAssignAttemptReopenMethodNone) {
                             if (scope.userSubmission) {
@@ -310,19 +311,14 @@ angular.module('mm.addons.mod_assign')
         controller: controller,
         templateUrl: 'addons/mod/assign/templates/submission.html',
         link: function(scope, element, attributes, controller) {
-            var moduleId = parseInt(attributes.moduleid, 10),
-                courseId = parseInt(attributes.courseid, 10),
-                submitId = parseInt(attributes.submitid, 10),
-                blindId = parseInt(attributes.blindid, 10);
-
-            scope.isGrading = !!submitId;
+            scope.isGrading = !!attributes.submitid;
             scope.statusNew = mmaModAssignSubmissionStatusNew;
             scope.statusReopened = mmaModAssignSubmissionStatusReopened;
             scope.loaded = false;
             scope.submitModel = {};
 
             var obsLoaded = scope.$on(mmaModAssignSubmissionInvalidatedEvent, function() {
-                controller.load(scope, moduleId, courseId, submitId, blindId);
+                controller.load(scope, attributes.moduleid, attributes.courseid, attributes.submitid, attributes.blindid);
             });
 
             // Check if submit through app is supported.
@@ -332,15 +328,15 @@ angular.module('mm.addons.mod_assign')
 
             scope.$on('$destroy', obsLoaded);
 
-            controller.load(scope, moduleId, courseId, submitId, blindId);
+            controller.load(scope, attributes.moduleid, attributes.courseid, attributes.submitid, attributes.blindid);
 
             // Add or edit submission.
             scope.goToEdit = function() {
                 $state.go('site.mod_assign-submission-edit', {
-                    moduleid: moduleId,
-                    courseid: courseId,
-                    userid: submitId,
-                    blindid: blindId
+                    moduleid: attributes.moduleid,
+                    courseid: attributes.courseid,
+                    userid: attributes.submitid,
+                    blindid: attributes.blindid
                 });
             };
 
@@ -359,7 +355,8 @@ angular.module('mm.addons.mod_assign')
 
                 var modal = $mmUtil.showModalLoading(),
                     previousAttempt = scope.previousAttempts[scope.previousAttempts.length - 1],
-                    previousSubmission = $mmaModAssign.getSubmissionObjectFromAttempt(scope.assign, previousAttempt);
+                    previousSubmission = scope.assign.teamsubmission ?
+                            previousAttempt.teamsubmission : previousAttempt.submission;
 
                 $mmaModAssignHelper.getSubmissionSizeForCopy(scope.assign, previousSubmission).catch(function() {
                     // Error calculating size, return -1.
@@ -432,14 +429,14 @@ angular.module('mm.addons.mod_assign')
             function invalidateAndRefresh() {
                 scope.loaded = false;
 
-                var promises = [$mmaModAssign.invalidateAssignmentData(courseId)];
+                var promises = [$mmaModAssign.invalidateAssignmentData(attributes.courseid)];
                 if (scope.assign) {
                     promises.push($mmaModAssign.invalidateAllSubmissionData(scope.assign.id));
                     promises.push($mmaModAssign.invalidateAssignmentUserMappingsData(scope.assign.id));
                 }
 
                 $q.all(promises).finally(function() {
-                    controller.load(scope, moduleId, courseId, submitId, blindId);
+                    controller.load(scope, attributes.moduleid, attributes.courseid, attributes.submitid, attributes.blindid);
                 });
             }
         }

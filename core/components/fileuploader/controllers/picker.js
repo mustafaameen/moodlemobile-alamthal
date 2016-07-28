@@ -22,7 +22,7 @@ angular.module('mm.core.fileuploader')
  * @name mmFileUploaderPickerCtrl
  */
 .controller('mmFileUploaderPickerCtrl', function($scope, $mmUtil, $mmFileUploaderHelper, $ionicHistory, $mmApp, $mmFS, $q,
-            $mmFileUploaderDelegate, $stateParams, $translate) {
+            $mmFileUploaderDelegate, $stateParams) {
 
     var maxSize = $stateParams.maxsize,
         upload = $stateParams.upload,
@@ -35,7 +35,6 @@ angular.module('mm.core.fileuploader')
 
     $scope.isAndroid = ionic.Platform.isAndroid();
     $scope.handlers = $mmFileUploaderDelegate.getHandlers();
-    $scope.title = $translate.instant(upload ? 'mm.fileuploader.uploadafile' : 'mm.fileuploader.selectafile');
 
     // Function called when a file is uploaded.
     function successUploading(result) {

@@ -21,7 +21,7 @@ angular.module('mm.addons.mod_assign')
  * @ngdoc service
  * @name $mmaModAssignFeedbackEditpdfHandler
  */
-.factory('$mmaModAssignFeedbackEditpdfHandler', function($mmaModAssign, $mmFilepool, $q, mmaModAssignComponent) {
+.factory('$mmaModAssignFeedbackEditpdfHandler', function() {
 
     var self = {};
 
@@ -41,20 +41,6 @@ angular.module('mm.addons.mod_assign')
      */
     self.getDirectiveName = function() {
         return 'mma-mod-assign-feedback-editpdf';
-    };
-
-    /**
-     * Get files used by this plugin.
-     * The files returned by this function will be prefetched when the user prefetches the assign.
-     *
-     * @param  {Object} assign     Assignment.
-     * @param  {Object} submission Data returned by $mmaModAssign#getSubmissionStatus.
-     * @param  {Object} plugin     Plugin.
-     * @param  {String} [siteId]   Site ID. If not defined, current site.
-     * @return {Promise}           Promise resolved when prefetch is done.
-     */
-    self.getPluginFiles = function(assign, submission, plugin, siteId) {
-        return $mmaModAssign.getSubmissionPluginAttachments(plugin);
     };
 
     return self;

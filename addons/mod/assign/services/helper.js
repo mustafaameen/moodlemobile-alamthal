@@ -212,21 +212,15 @@ angular.module('mm.addons.mod_assign')
      */
     self.prepareSubmissionPluginData = function(assign, submission, inputData) {
         var pluginData = {},
-            promises = [],
-            error;
+            promises = [];
 
         angular.forEach(submission.plugins, function(plugin) {
             promises.push($mmaModAssignSubmissionDelegate.preparePluginSubmissionData(
-                    assign, submission, plugin, inputData, pluginData).catch(function(message) {
-                error = message;
-                return $q.reject();
-            }));
+                    assign, submission, plugin, inputData, pluginData));
         });
 
         return $mmUtil.allPromises(promises).then(function() {
             return pluginData;
-        }).catch(function() {
-            return $q.reject(error);
         });
     };
 
@@ -262,7 +256,7 @@ angular.module('mm.addons.mod_assign')
 
         return promise.then(function(fileEntry) {
             // Now upload the file.
-            return $mmFileUploader.uploadGenericFile(fileEntry.toURL(), fileName, fileEntry.type, true, 'draft', itemId, siteId)
+            return $mmFileUploader.uploadGenericFile(fileEntry.toURL(), fileName, fileEntry.type, true, itemId, siteId)
                     .then(function(result) {
                 return result.itemid;
             });
@@ -292,8 +286,7 @@ angular.module('mm.addons.mod_assign')
 
         // Upload only the first file first to get a draft id.
         return self.uploadFile(assignId, files[0]).then(function(itemId) {
-            var promises = [],
-                error;
+            var promises = [];
 
             angular.forEach(files, function(file, index) {
                 if (index === 0) {
@@ -301,16 +294,11 @@ angular.module('mm.addons.mod_assign')
                     return;
                 }
 
-                promises.push(self.uploadFile(assignId, file, itemId, siteId).catch(function(message) {
-                    error = message;
-                    return $q.reject();
-                }));
+                promises.push(self.uploadFile(assignId, file, itemId, siteId));
             });
 
             return $q.all(promises).then(function() {
                 return itemId;
-            }).catch(function() {
-                return $q.reject(error);
             });
         });
     };

@@ -172,8 +172,7 @@ angular.module('mm.addons.mod_scorm')
      */
     self.linksHandler = function() {
 
-        var self = {},
-            patterns = ['/mod/scorm/view.php', '/mod/scorm/grade.php'];
+        var self = {};
 
         /**
          * Whether or not the handler is enabled for a certain site.
@@ -202,15 +201,9 @@ angular.module('mm.addons.mod_scorm')
          */
         self.getActions = function(siteIds, url, courseId) {
             // Check it's a SCORM URL.
-            if (url.indexOf(patterns[0]) > -1) {
-                // SCORM index.
+            if (typeof self.handles(url) != 'undefined') {
                 return $mmContentLinksHelper.treatModuleIndexUrl(siteIds, url, isEnabled, courseId);
-            } else if (url.indexOf(patterns[1]) > -1) {
-                // SCORM grade.
-                // @todo Go to user attempts list if it isn't current user.
-                return $mmContentLinksHelper.treatModuleGradeUrl(siteIds, url, isEnabled, courseId);
             }
-
             return $q.when([]);
         };
 
@@ -221,11 +214,9 @@ angular.module('mm.addons.mod_scorm')
          * @return {String}     Site URL. Undefined if the URL doesn't belong to this handler.
          */
         self.handles = function(url) {
-            for (var i = 0; i < patterns.length; i++) {
-                var position = url.indexOf(patterns[i]);
-                if (position > -1) {
-                    return url.substr(0, position);
-                }
+            var position = url.indexOf('/mod/scorm/view.php');
+            if (position > -1) {
+                return url.substr(0, position);
             }
         };
 
