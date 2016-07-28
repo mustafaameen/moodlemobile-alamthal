@@ -8116,6 +8116,9 @@ mm-timer.mm-timer.mm-timer-timeleft-15 {
 .mm-monospaced {
   font-family: Andale Mono,Monaco,Courier New,DejaVu Sans Mono,monospace; }
 
+.mm-bold {
+  font-weight: bold; }
+
 .popover.mm-context-menu {
   width: 320px; }
 
@@ -8143,6 +8146,9 @@ mm-timer.mm-timer.mm-timer-timeleft-15 {
 
 .mm-button-with-inner-link:after, .button.mm-button-with-inner-link:after {
   display: none; }
+
+mm-format-text audio, mm-format-text video, mm-format-text a, mm-format-text iframe {
+  pointer-events: auto; }
 
 .checkbox input:before, .checkbox-icon:before {
   border-radius: 0; }
@@ -8842,6 +8848,25 @@ select.mma-mod_survey-select {
 .mma-mod_wiki-subwiki-picker .item.item-selected .icon {
   font-size: 24px; }
 
+.qbehaviour_deferredcbm_actual_percentage {
+  font-weight: bold; }
+
+.qbehaviour_deferredcbm_judgementok {
+  font-weight: bold;
+  color: #080; }
+
+.qbehaviour_deferredcbm_slightlyunderconfident, .qbehaviour_deferredcbm_slightlyoverconfident {
+  font-weight: bold;
+  color: #600; }
+
+.qbehaviour_deferredcbm_underconfident, .qbehaviour_deferredcbm_overconfident {
+  font-weight: bold;
+  color: #c00; }
+
+.mma-qbehaviour-deferredcbm-certainty-title, .item.mma-qbehaviour-deferredcbm-certainty-title, .item.mma-qbehaviour-deferredcbm-certainty-title p {
+  font-weight: bold;
+  font-size: 16px; }
+
 .mma-qtype-ddimageortext-container mm-loading {
   position: absolute;
   left: 50%; }
@@ -9090,25 +9115,6 @@ select.mma-mod_survey-select {
 .mma-qtype-multianswer-container input[type="radio"], .mma-qtype-multianswer-container input[type="checkbox"] {
   margin-top: -4px;
   margin-right: 7px; }
-
-.qbehaviour_deferredcbm_actual_percentage {
-  font-weight: bold; }
-
-.qbehaviour_deferredcbm_judgementok {
-  font-weight: bold;
-  color: #080; }
-
-.qbehaviour_deferredcbm_slightlyunderconfident, .qbehaviour_deferredcbm_slightlyoverconfident {
-  font-weight: bold;
-  color: #600; }
-
-.qbehaviour_deferredcbm_underconfident, .qbehaviour_deferredcbm_overconfident {
-  font-weight: bold;
-  color: #c00; }
-
-.mma-qbehaviour-deferredcbm-certainty-title, .item.mma-qbehaviour-deferredcbm-certainty-title, .item.mma-qbehaviour-deferredcbm-certainty-title p {
-  font-weight: bold;
-  font-size: 16px; }
 
 .button.active, .button.activated {
   box-shadow: none;
